@@ -12,17 +12,8 @@ plot(average8, title='Average', color=color.new(color.purple, 0), linewidth=2)
 
 lookback_swing = 5
 
-candle_engulfing = close > open and close[1] < open[1] and close >= open[1] and open <= close[1] and close > average8
-candle_hammer = 2 * math.abs(close - open) < math.min(close, open) - low and high - math.max(close, open) < math.abs(close - open) and close > open and close > average8
-candle_cr = low < low[1] and low < low[2] and close > close[1] and close > open and close > average8
-
-buy = candle_engulfing or candle_hammer or candle_cr
-
-vcandle_engulfing = close < open and close[1] > open[1] and close <= open[1] and open >= close[1] and close < average8
-vcandle_hammer = 2 * math.abs(close - open) < high - math.max(close, open) and math.min(close, open) - low < math.abs(close - open) and close < open and close < average8
-vcandle_cr = high > high[1] and high > high[2] and close < close[1] and close < open and close < average8
-
-sell = vcandle_engulfing or vcandle_hammer or vcandle_cr
+buy = close[1] < open[1] and close >= open[1] and open <= close[1] and close > average8
+sell = close[1] > open[1] and close <= open[1] and open >= close[1] and close < average8
 
 if enable_rare_signal
     buy := buy and open > average8
@@ -35,14 +26,9 @@ else
 
 barcolor(buy and strategy.position_size == 0 ? color.green : sell and strategy.position_size > 0 ? color.red : color.new(color.black, 100))
 
-plotshape(buy and candle_engulfing and strategy.position_size == 0, title='Bullish Engulfing', style=shape.labeldown, color=color.new(color.green, 0), text='Bullish Engulfing', textcolor=color.new(color.white, 0))
-plotshape(buy and candle_hammer and strategy.position_size == 0, title='Bullish Hammer', style=shape.labeldown, color=color.new(color.green, 0), text='Bullish Hammer', textcolor=color.new(color.white, 0))
-plotshape(buy and candle_cr and strategy.position_size == 0, title='Bullish PCR', style=shape.labeldown, color=color.new(color.green, 0), text='Bullish PCR', textcolor=color.new(color.white, 0))
+plotshape(buy and strategy.position_size == 0, title='Bullish', style=shape.labeldown, color=color.new(color.green, 0), text='Bullish', textcolor=color.new(color.white, 0))
 
-
-plotshape(sell and vcandle_engulfing and strategy.position_size > 0, title='Bearish Engulfing', style=shape.labelup, location=location.belowbar, color=color.new(color.red, 0), text='Bearish Engulfing', textcolor=color.new(color.white, 0))
-plotshape(sell and vcandle_hammer and strategy.position_size > 0, title='Bearish Hammer', style=shape.labelup, location=location.belowbar, color=color.new(color.red, 0), text='Bearish Hammer', textcolor=color.new(color.white, 0))
-plotshape(sell and vcandle_cr and strategy.position_size > 0, title='Bearish PCR', style=shape.labelup, location=location.belowbar, color=color.new(color.red, 0), text='Bearish PCR', textcolor=color.new(color.white, 0))
+plotshape(sell and strategy.position_size > 0, title='Bearish', style=shape.labelup, location=location.belowbar, color=color.new(color.red, 0), text='Bearish', textcolor=color.new(color.white, 0))
 
 
 strategy.entry('Buy', strategy.long, when=buy)
